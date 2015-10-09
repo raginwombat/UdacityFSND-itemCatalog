@@ -13,7 +13,7 @@ This is a web app that allows a user to display a catalog of items grouped by ca
 Instructions
 -----------------------------------------------------
 
-ocumentation
+Documentation
 ------------------
 
 To interact with the app open a web broser and go to localhost:5000/
@@ -22,7 +22,6 @@ Pages:
 	localhost:5000/catalog/json JSON dump of the catalog and items
 	localhost:5000/catalog/xml XML dump of the catalog
 
-	
 
 
 Installation
@@ -35,7 +34,7 @@ Navigate to the directory with the scrpts in it and run the followign commands:
 	Set Up up the database for the app
 	$ python database_set.py 
 
-	This step is optional if you'd like to preload the app with data prior to use.
+	This step is optional, but highly recommended if you'd like to preload the app with data prior to use.
 	$ testCatalog.py 
 
 	Run the application
