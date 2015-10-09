@@ -1,0 +1,24 @@
+{% extends 'base.html'%}
+
+
+{% block headerTitle %} 
+ | <a href = "{{url_for('showItems', category_name = category_name)}}"> {{ category_name }} </a> 
+ {% endblock %}
+{% block head%}
+	{{ super() }}
+Catalog Main Edit
+{% endblock %}
+
+
+
+{% block content %}
+<div class=superHelperLinks> 
+
+	{% for item in catalogItems %}
+			<br>
+			 <a href=" {{ url_for('showItemDetail', category_name = category_name, item_name=item.name) }}">{{ item.name }} </a>
+			{{ item.description}}
+			
+
+	{% endfor %}
+{% endblock %}

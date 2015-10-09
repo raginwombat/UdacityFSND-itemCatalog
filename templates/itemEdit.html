@@ -1,0 +1,41 @@
+{% extends 'base.html'%}
+
+{% block headerTitle %}
+| <a href = "{{url_for('showItems', category_name = category_name)}}"> {{ category_name }} </a> | Edit {{item.name}} {% endblock %}
+{% block head%}
+	{{ super() }}
+Item Main Edit
+{% endblock %}
+
+
+
+{% block content %}
+<strong> Edit {{item.name}}</strong>
+
+	<form enctype="multipart/form-data"  action = "{{ url_for('editItem', category_name = category_name, item_name = item.name) }}" method = "POST">
+		<input type="text" name = name Value="{{ item.name }}">
+		<br>
+		<input type="text" name = description Value="{{ item.description }}">
+		<!--<input type="text" name = image Value="{{ item.name }}"> !-->
+		<input type="hidden" name = "token_id"  value = {{ state }} >
+		<br>
+		<select name=Category>
+			{% for category in categories%}
+				{%if category.name == category_name%}
+					<option value="{{ category.name }}" selected="selected">{{ category.name }}</option>
+				{% else %}
+					<option value="{{ category.name }}">{{ category.name }}</option>
+				{% endif %}
+			{% endfor %}
+			
+			{# future feature <option value = "New Category"> New Category</optino>  #}
+		</select>
+		<br>
+		{% if item.catalog_image_url %}
+			<img src="{{ url_for('static', filename = "images/"+item.catalog_image_url) }}"> 
+		{% endif %}
+		<input type=file name=file>
+		<br>
+		<input type="submit" Value="Edit">
+	</form>
+{% endblock %}

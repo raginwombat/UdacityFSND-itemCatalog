@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='base.css') }}">
+</head>
+<body>
+
+<table>
+	<thead>
+	<tr>
+	<td>
+	
+		<div class = "header"> <header> 
+			<a href = "{{url_for('showCatalog')}}">Item Catalog</a>
+			{% block headerTitle %}
+			{% endblock%}
+		</header> </div> 
+	
+	</td>
+	<td>
+	{% if logged_in %}
+		<div class = "login"> <a href="{{url_for('gdisconnect') }}"> Log out</a> </div>
+		
+	{% else %}
+		<div class = "login"> <a href="{{url_for('showLogin') }}"> Login</a> </div>
+	{% endif%}
+	</td>
+	</tr>
+	</thead>
+	<tr>
+		<table style="width:100%">
+
+		<td class="navbar">
+			{% block categories %}
+		
+				{% for category in categories %}
+					<p>
+					<a href= "{{ url_for( 'showItems', category_name = category.name) }}"> {{ category.name }}</a>
+				{% endfor %}
+		
+			{% endblock %}
+
+		</td>
+
+		<td>	
+			{% block content %}
+			{% endblock %}
+		</td>
+
+		<tr>
+		</table>
+	</tr>
+</table>
+</body>

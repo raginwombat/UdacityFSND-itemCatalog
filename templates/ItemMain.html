@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+
+
+{% block headerTitle %} 
+ |	<a href = "{{url_for('showItems', category_name = category_name)}}"> {{ category_name }} </a> 
+{% endblock %}
+
+{% block head%}
+	{{ super() }}
+Catalog Main Edit
+{% endblock %}
+
+
+
+{% block content %}
+<div class=superHelperLinks> 
+	<a href = "{{url_for('editCatalog', category_name = category_name)}}">Edit Catalog</a>
+	<a href = "{{url_for('deleteCatalog', category_name = category_name)}}">Delete Catalog</a> </div>
+			<div class = helperLinks> <a href=" {{ url_for('newItem', category_name = category_name) }}"> Add New Item </a> </div>
+	{% for item in catalogItems %}
+			<br>
+			 <a href=" {{ url_for('showItemDetail', category_name = category_name, item_name=item.name) }}">{{ item.name }} </a>
+			{{ item.description}}
+			<div class = helperLinks> <a href=" {{ url_for('editItem', category_name = category_name, item_name=item.name) }}"> Edit</a> <a href=" {{ url_for('deleteItem', category_name = category_name, item_name=item.name) }}"> Delete</a></div>
+
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html'%}
+
+{% block headerTitle %} 
+ |	<a href = "{{url_for('showItems', category_name = category_name)}}"> {{ category_name }} </a> | New {% endblock %}
+{% block head%}
+	{{ super() }}
+New Item 
+{% endblock %}
+
+
+
+{% block content %}
+
+	<form enctype="multipart/form-data" action = "{{ url_for('newItem', category_name = category_name) }}" method = "POST">
+		<input type="text" name = name Value="Name">
+		<br>
+		<input type="text" name = description Value="Description">
+		{# <!--<input type="text" name = image Value="{{ item.name }}"> !--> #}
+		<input type="hidden" name = "token_id"  value = {{ state }} >
+		<br>
+		<input type=file name=file>
+		<br>
+		<select name=Category>
+			{% for category in categories%}
+					<option value="{{ category.name }}">{{ category.name }}</option>
+			{% endfor %}
+			
+			{# future feature <option value = "New Category"> New Category</optino>  #}
+		</select>
+		<input type="submit" Value="Create">
+	</form>
+{% endblock %}

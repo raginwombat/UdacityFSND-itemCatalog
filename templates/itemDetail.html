@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{% block headerTitle %}
+ |	<a href = "{{url_for('showItems', category_name = category_name)}}"> {{ category_name }} </a> | {{item.name}} {% endblock %}
+{% block head%}
+	{{ super() }}
+Item Detail   authenticated
+{% endblock %}
+
+
+
+
+
+{% block content %}
+	<h1>{{ item.name }}</h1>
+	<h6>{{ item.description }}</h6>
+	{% if item.catalog_image_url %}
+		<img src="{{ url_for('static', filename = "images/"+item.catalog_image_url) }}"> 
+	{% endif %}
+
+{% endblock %}

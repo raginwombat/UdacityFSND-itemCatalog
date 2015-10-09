@@ -1,0 +1,20 @@
+{% extends 'base.html'%}
+
+{% block headerTitle %} 
+| Edit {{ category.name }} {% endblock %}
+
+{% block head%}
+	{{ super() }}
+Catalog Main Edit
+{% endblock %}
+
+
+{% block content %}
+<strong> Edit {{category.name}}</strong>
+
+	<form action = "{{ url_for('editCatalog', category_name = category.name) }}" method = "POST">
+		<input type="text" name = name Value="{{ category.name }}">
+		<input type="hidden" name = "token_id"  value = {{ state }} >
+		<input type="submit" Value="Edit">
+	</form>
+{% endblock %}

@@ -1,0 +1,48 @@
+ 	=======================
+|	Item Catalog Web App		|
+ 	========================
+ 	-----------------------------------
+|   Project 3 subumission by R. Nelson	|
+ 	-----------------------------------
+
+ Overview
+-----------------------------------------------------
+This is a web app that allows a user to display a catalog of items grouped by category. Once logged in the can edit, create and delete categories and items.
+
+
+Instructions
+-----------------------------------------------------
+
+ocumentation
+------------------
+
+To interact with the app open a web broser and go to localhost:5000/
+Pages:
+	localhost:5000/ or localhost:5000/catalog main site
+	localhost:5000/catalog/json JSON dump of the catalog and items
+	localhost:5000/catalog/xml XML dump of the catalog
+
+	
+
+
+Installation
+------------------
+This library requires SQLite, Python 2.7 and Flask installed locally. THe libraries can be installed using the apt-get command or by using the UDacity Nano Degree VM available from http://github.com/udacity/full.
+
+To setup the application you'll need to have Python, Flask and SQLAlchemy install on the server.
+Navigate to the directory with the scrpts in it and run the followign commands:
+	
+	Set Up up the database for the app
+	$ python database_set.py 
+
+	This step is optional if you'd like to preload the app with data prior to use.
+	$ testCatalog.py 
+
+	Run the application
+	$ python  itemCatalog.py
+
+Sucessfull completion of the setup and launching of the app will result in the comandline displaying the following:
+
+ * Running on http://0.0.0.0:5000/
+ * Restarting with reloader
+
