@@ -26,7 +26,7 @@ Pages:
 
 Installation
 ------------------
-This library requires SQLite, Python 2.7 and Flask installed locally. THe libraries can be installed using the apt-get command or by using the UDacity Nano Degree VM available from http://github.com/udacity/full.
+This library requires SQLite, Python 2.7 and Flask >=0.9 installed locally. THe libraries can be installed using the apt-get command or by using the UDacity Nano Degree VM available from http://github.com/udacity/full.
 
 To setup the application you'll need to have Python, Flask and SQLAlchemy install on the server.
 Navigate to the directory with the scrpts in it and run the followign commands:

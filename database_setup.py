@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Unicode
+from sqlalchemy import Column, ForeignKey, Integer, String, Unicode, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -29,9 +29,9 @@ class Category(Base):
     __tablename__ = 'category'
    
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(250), nullable=False, unique=True)
     user_id=Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    user = relationship(User, cascade="all, delete-orphan", single_parent=True)
 
     @property
     def serialize(self):
@@ -47,12 +47,12 @@ class Category(Base):
 class CatalogItem(Base):
     __tablename__ = 'CatalogItem'
 
-    name =Column(String(80), nullable = False)
+    name =Column(String(80), nullable = False, unique=True)
     id = Column(Integer, primary_key = True)
     description = Column(String(250))
     catalog_image_url =  Column(String(512))
     category_id = Column(Integer,ForeignKey('category.id'))
-    category = relationship(Category)
+    category = relationship(Category, cascade="all, delete-orphan", single_parent=True)
     user_id=Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 

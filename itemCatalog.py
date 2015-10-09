@@ -40,6 +40,8 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif', 'jpeg', 'tiff', 'bmp', 'svg'])
 #Flask Declartions
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+	#limit size of uploaded picture
+app.config['MAX_CONTENT_LENGTH'] = 16*1024*1024
 
 #Support structures
 @app.route('/login')
@@ -106,7 +108,7 @@ def gconnect():
 		return response
 
 	# Store the access token in the session for later use.
-	login_session['credentials'] = credentials
+	login_session['credentials'] = credentials.access_token
 	login_session['gplus_id'] = gplus_id
 
 	# Get user info

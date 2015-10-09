@@ -13,10 +13,10 @@ Item Main Edit
 <strong> Edit {{item.name}}</strong>
 
 	<form enctype="multipart/form-data"  action = "{{ url_for('editItem', category_name = category_name, item_name = item.name) }}" method = "POST">
-		<input type="text" name = name Value="{{ item.name }}">
+		<input type="text" name = name value="{{ item.name }}">
 		<br>
-		<input type="text" name = description Value="{{ item.description }}">
-		<!--<input type="text" name = image Value="{{ item.name }}"> !-->
+		<input type="text" name = description value="{{ item.description }}">
+		<!--<input type="text" name = image value="{{ item.name }}"> !-->
 		<input type="hidden" name = "token_id"  value = {{ state }} >
 		<br>
 		<select name=Category>
@@ -36,6 +36,6 @@ Item Main Edit
 		{% endif %}
 		<input type=file name=file>
 		<br>
-		<input type="submit" Value="Edit">
+		<input type="submit" value="Edit">
 	</form>
 {% endblock %}
