@@ -13,8 +13,9 @@ import string
 
 #API endpoint
 from werkzeug.contrib.atom import AtomFeed
-from xml.etree.ElementTree import  SubElement, Comment, Element, ElementTree, tostring
+from xml.etree.ElementTree import  SubElement, Comment, Element, ElementTree, tostring, dump
 from xml.dom import minidom
+
 
 #Helper Functions
 from helpers import *
@@ -25,7 +26,6 @@ from oauth2client.client import FlowExchangeError
 import httplib2
 import json
 from flask import make_response
-import requests
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog Project 3"
 
@@ -483,30 +483,33 @@ def deleteItem(category_name, item_name):
 @app.route('/catalog/<string:exensivility_API>')
 def APISupport(exensivility_API):
 	if exensivility_API.lower() == 'json':
-		return jsonify( category = [c.serialize for c in session.query(Category).all()], 
-			item =[i.serialize for i in session.query(CatalogItem).all() ])
+		
+		response = make_response(jsonify( category = [c.serialize for c in session.query(Category).all()], 
+			item =[i.serialize for i in session.query(CatalogItem).all() ]), 200)
+		response.headers['Content-Type'] = 'application/json'
+
+		return response
 
 
 	elif exensivility_API.lower() == 'xml':
 		nameString = 'Catalog for user %s'%login_session['username']
 		catalog = Element('Catalog')
-		print type(catalog)
-		for category in session.query(Category).all():
-			catalog.append(Element('Category Name') )		
-			catalog.text = category.name
-			for item in session.query(CatalogItem).filter_by(category_id = category.id).all():
-				imgItem = SubElement(catalog, 'Image Name')
-				imgItem.text = item.catalog_image_url
-				descItem  = SubElement(catalog, 'Description')
-				descItem.text =  item.description
-				catItem  = SubElement(catalog, 'Item Name')
+		for cat in session.query(Category).all():
+			category = SubElement(catalog, "Category Name")
+			category.text = cat.name
+			for item in session.query(CatalogItem).filter_by(category_id = cat.id).all():
+				
+				catItem  = SubElement(category, 'Item Name')
 				catItem.text =  item.name
+				descItem  = SubElement(category, 'Description')
+				descItem.text =  item.description
+				imgItem = SubElement(category, 'Image Name')
+				imgItem.text = item.catalog_image_url
 
-
-	#shoukd return pretry xml, aet jeader content type
-		#return  minidom.parseString(ElementTree.tostring(catalog, 'utf-8') ).toprettyxml(indent="  ")
-		#return  minidom.parseString(tostring(catalog, 'utf-8')).toprettyxml(indent=" ")
-		return tostring(catalog, 'utf-8')
+		response = make_response(tostring(catalog, 'utf-8'), 200)
+		response.mimetype = 'text/xml'
+		
+		return response
 
 
 	else:
