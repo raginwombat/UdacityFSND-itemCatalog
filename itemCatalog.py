@@ -9,13 +9,15 @@ from database_setup import Base, User, Category, CatalogItem
 
 #Session token imports
 from flask import session as login_session
-import random, string
+import string
 
 #API endpoint
 from werkzeug.contrib.atom import AtomFeed
 from xml.etree.ElementTree import  SubElement, Comment, Element, ElementTree, tostring
 from xml.dom import minidom
 
+#Helper Functions
+from helpers import *
 
 #call back code imports
 from oauth2client.client import flow_from_clientsecrets
@@ -123,9 +125,9 @@ def gconnect():
 	login_session['email'] = data['email']
 
 	# see if user exists, if it doesn't make a new one
-	user_id = getUserID(data["email"])
+	user_id = getUserID(session, data["email"])
 	if not user_id:
-		user_id = createUser(login_session)
+		user_id = createUser(session, login_session)
 	login_session['user_id'] = user_id
 
 
@@ -142,47 +144,7 @@ def gconnect():
 	return output
 
 
-#user state debug block
-def userStateDebug():
-	print "User State:"
-	print "username: %s"% login_session['username']
-	print "securityState: %s"%login_session['securityState']
-	print "email: %s"%login_session['email']
 
-
-# User Helper Functions
-def createUser(login_session):
-	newUser = User(name=login_session['username'], email=login_session[
-				   'email'], picture=login_session['picture'])
-	session.add(newUser)
-	session.commit()
-	user = session.query(User).filter_by(email=login_session['email']).one()
-	return user.id
-
-
-def getUserInfo(user_id):
-	user = session.query(User).filter_by(id=user_id).one()
-	return user
-
-
-def getUserID(email):
-	try:
-		user = session.query(User).filter_by(email=email).one()
-		return user.id
-	except:
-		return None
-
-def createState():
-	#create new state token to pass during post requests to mitigate XSS and CSRF attacks
-	state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-					for x in xrange(32))
-	return state
-
-
-
-#Check that image file is valid and sanditize name for saving
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.')[1] in ALLOWED_EXTENSIONS
 
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
@@ -215,12 +177,9 @@ def gdisconnect():
 		
 		return redirect(url_for('showCatalog'))
 
-def prettify(elem):
-    """Return a pretty-printed XML string for the Element.
-    """
-    rough_string = ElementTree.tostring(elem, 'utf-8')
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
+
+
+
 
 ##################################
 #
@@ -283,14 +242,14 @@ def editCatalog(category_name):
 			#CSRF mitigation
 			if request.form['token_id'] != login_session['securityState']:
 				flash("Error, incorrect security Key. please try again")
-				return redirect(url_for('showCatalog'), logged_in=1)
+				return redirect(url_for('showCatalog'))
 			else:
 				editCatalog = session.query(Category).filter_by(name = category_name).one()
 				editCatalog.name = request.form['name']
 				session.add(editCatalog)
 				session.commit()
-				flash("Created New Catalog")
-				return redirect(url_for('showCatalog'), logged_in=1)
+				flash("Created Edited Catlog")
+				return redirect(url_for('showCatalog'))
 		else:
 			login_session['securityState'] =  createState()
 			editCatalog = session.query(Category).filter_by(name = category_name).one()
@@ -300,7 +259,7 @@ def editCatalog(category_name):
 	else:
 		return redirect(url_for('showCatalog'), logged_in=None)
 
-@app.route('/catalog/<string:category_name>/delete')
+@app.route('/catalog/<string:category_name>/delete',  methods = ['GET', 'POST'])
 def deleteCatalog(category_name):
 	if 'username' in login_session:
 		categories = session.query(Category).all()
@@ -309,12 +268,12 @@ def deleteCatalog(category_name):
 			#CSRF mitigation
 			if request.form['token_id'] != login_session['securityState']:
 				flash("Error, incorrect security Key. please try again")
+
+			else:
 				catalogDelete = session.query(Category).filter_by(name = category_name).one()
 				session.delete(catalogDelete)
 				session.commit()
-				return redirect(url_for('showCatalog'), logged_in=1)
-			else:
-				return redirect(url_for('showCatalog'), logged_in=1)
+				return redirect(url_for('showCatalog'))
 		else:
 			login_session['securityState']  =  createState()
 			category = session.query(Category).filter_by(name=category_name ).one()
@@ -324,6 +283,27 @@ def deleteCatalog(category_name):
 	else:
 		return redirect(url_for('showCatalog'), logged_in=None)
 
+@app.route('/catalog/new', methods = ['GET', 'POST'])
+def newCatalog():
+	if 'username' in login_session:
+		categories = session.query(Category).all()
+		if request.method == 'POST':
+			#post snippet
+			#CSRF mitigation
+			if request.form['token_id'] != login_session['securityState']:
+				flash("Error, incorrect security Key. please try again")
+
+			else:
+				newCategory = Category(name=request.form['name'], user_id=getUserID(session, login_session['email']) )
+				session.add(newCategory)
+				session.commit()
+				return redirect(url_for('showCatalog'))
+		else:
+			login_session['securityState']  =  createState()			
+			return render_template('catalogNew.html',  categories=categories, state = login_session['securityState'], logged_in=1)
+	 #if the user isnt' logged in they can't edit the catalog
+	else:
+		return redirect(url_for('showCatalog'), logged_in=None)
 
 
 ##################################
@@ -373,7 +353,7 @@ def newItem(category_name):
 			#CSRF mitigation
 			if request.form['token_id'] != login_session['securityState']:
 				flash("Error, incorrect security Key. please try again")
-				return redirect(url_for('showCatalog'), logged_in=1)
+				return redirect(url_for('showCatalog'))
 			else: #Authenticated actuallly change
 				#actually post change
 				file = request.files['file']
@@ -396,7 +376,7 @@ def newItem(category_name):
 					catalog_image_url = os.path.join(file.filename))
 				session.add(newItem)
 				session.commit()
-				return redirect(url_for('showCatalog'), logged_in=1)
+				return redirect(url_for('showCatalog'))
 		else :
 			#GET Block
 			#page to create new item
@@ -417,7 +397,7 @@ def editItem(category_name, item_name):
 			#CSRF mitigation
 			if request.form['token_id'] != login_session['securityState']:
 				flash("Error, incorrect security Key. please try again")
-				return redirect(url_for('showCatalog'), logged_in=1)
+				return redirect(url_for('showCatalog'))
 			else: #Authenticated, actuallly change item
 				#actually post change
 				category = session.query(Category).filter_by( name=category_name).one()
@@ -477,7 +457,7 @@ def deleteItem(category_name, item_name):
 			if request.form['token_id'] != login_session['securityState']:
 				print "broken delete"
 				flash("Error, incorrect security Key. please try again")
-				return redirect(url_for('showCatalog'), logged_in=1)
+				return redirect(url_for('showCatalog'))
 			else: #Authenticated actually delete sthe itme
 				deleteItem = session.query(CatalogItem).filter_by(name = item_name).one()
 				session.delete(deleteItem)

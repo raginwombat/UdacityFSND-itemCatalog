@@ -14,7 +14,7 @@ Instructions
 -----------------------------------------------------
 
 Documentation
-------------------
+--------------------------------
 
 To interact with the app open a web broser and go to localhost:5000/
 Pages:
@@ -25,9 +25,23 @@ Pages:
 
 
 Installation
-------------------
+--------------------------------
 This library requires SQLite, Python 2.7 and Flask >=0.9 installed locally. THe libraries can be installed using the apt-get command or by using the UDacity Nano Degree VM available from http://github.com/udacity/full.
 
+Setting Up 0Auth2
+---------------------------
+To host this app a Google+ 0Auth2 client secret must be created. Follow the instruction in https://auth0.com/docs/connections/social/google to generate a web application 0Auth2 client secret.
+
+An important note is when creating the secret the Authorized Javscript Origins must be on the IP addrss or website that is hosting the app with port 5000 authorized.
+Ex:
+	To run locally the Authorized javascript origins should contain http://localhost:5000, http://127.0.0.1:5000, http://0.0.0.0:5000
+
+After creating download the resulting client_secrets.json place it in the root directory with this itemCatalog.py.
+
+You must also replace the data-clientid string in the ./templates/login.html file with the client ID that was created and is in the client_secret.json file.
+
+Setting Up the Enviroment 
+---------------------------
 To setup the application you'll need to have Python, Flask and SQLAlchemy install on the server.
 Navigate to the directory with the scrpts in it and run the followign commands:
 	

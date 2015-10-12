@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{% block headerTitle %} 
+ |	<a href = "{{url_for('showItems', category_name = category_name)}}"> | New Category {% endblock %}
+{% block head%}
+	{{ super() }}
+New Item 
+{% endblock %}
+
+
+
+{% block content %}
+
+	<form enctype="multipart/form-data" action = "{{ url_for('newCatalog') }}" method = "POST">
+		<input type="text" name = name placeholder="Category Name">
+		<br>
+		<input type="hidden" name = "token_id"  value = {{ state }} >
+		<br>
+		<input type="submit" Value="Create">
+	</form>
+{% endblock %}

@@ -12,10 +12,9 @@ New Item
 {% block content %}
 
 	<form enctype="multipart/form-data" action = "{{ url_for('newItem', category_name = category_name) }}" method = "POST">
-		<input type="text" name = name Value="Name">
+		<input type="text" name = name placeholder="Name">
 		<br>
-		<input type="text" name = description Value="Description">
-		{# <!--<input type="text" name = image Value="{{ item.name }}"> !--> #}
+		<input type="text" name = description placeholder="Description">
 		<input type="hidden" name = "token_id"  value = {{ state }} >
 		<br>
 		<input type=file name=file>

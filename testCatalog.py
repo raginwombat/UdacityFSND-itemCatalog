@@ -11,7 +11,7 @@ session = DBSession()
 
 
 user1 = User(name="Jaque Pepin", email="test@tester.com", 
- 	picture="http://www-tc.pbs.org/food/wp-content/blogs.dir/2/files/2011/09/Jacques-Pepin.jpg")
+ 	picture="")
 
 session.add(user1)
 session.commit()
