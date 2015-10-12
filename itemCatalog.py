@@ -37,7 +37,7 @@ session = DBSession()
 
 #Image File location delcarions
 UPLOAD_FOLDER = './static/images'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif', 'jpeg', 'tiff', 'bmp', 'svg'])
+
 
 #Flask Declartions
 app = Flask(__name__)
@@ -219,7 +219,7 @@ def newCatalog():
 				newCatalog = Catalog( name = request.form['name'], user_id = login_session['user_id'] )
 				#post snippet            
 				flash('Created New Catalog')
-				return redirect( url_for('showCatalog') , logged_in=1)
+				return redirect( url_for('showCatalog') )
 		else:
 			#Get Block
 			login_session['securityState']  =  createState()
@@ -229,7 +229,7 @@ def newCatalog():
 	else:
 		#if user isn't logged in bounce them back to show catalog
 		print "User isn't logged in"
-		return redirect(url_for('showCatalog'), logged_in=None)
+		return redirect(url_for('showCatalog') )
 
 @app.route('/catalog/<string:category_name>/edit', methods = ['GET', 'POST'])
 	#edit catalog
@@ -254,10 +254,11 @@ def editCatalog(category_name):
 			login_session['securityState'] =  createState()
 			editCatalog = session.query(Category).filter_by(name = category_name).one()
 
-			return render_template('catalogEdit.html', category = editCatalog, categories=categories, state = login_session['securityState'], logged_in=1)
+			return render_template('catalogEdit.html', category = editCatalog, categories=categories, 
+					state = login_session['securityState'], logged_in=1)
 	 #if the user isnt' logged in they can't edit the catalog
 	else:
-		return redirect(url_for('showCatalog'), logged_in=None)
+		return redirect(url_for('showCatalog') )
 
 @app.route('/catalog/<string:category_name>/delete',  methods = ['GET', 'POST'])
 def deleteCatalog(category_name):
@@ -278,10 +279,11 @@ def deleteCatalog(category_name):
 			login_session['securityState']  =  createState()
 			category = session.query(Category).filter_by(name=category_name ).one()
 			
-			return render_template('catalogDelete.html', category = category, categories=categories, state = login_session['securityState'], logged_in=1)
+			return render_template('catalogDelete.html', category = category, categories=categories, 
+					state = login_session['securityState'], logged_in=1)
 	 #if the user isnt' logged in they can't edit the catalog
 	else:
-		return redirect(url_for('showCatalog'), logged_in=None)
+		return redirect(url_for('showCatalog'))
 
 @app.route('/catalog/new', methods = ['GET', 'POST'])
 def newCatalog():
@@ -300,10 +302,11 @@ def newCatalog():
 				return redirect(url_for('showCatalog'))
 		else:
 			login_session['securityState']  =  createState()			
-			return render_template('catalogNew.html',  categories=categories, state = login_session['securityState'], logged_in=1)
+			return render_template('catalogNew.html',  categories=categories, 
+					state = login_session['securityState'], logged_in=1)
 	 #if the user isnt' logged in they can't edit the catalog
 	else:
-		return redirect(url_for('showCatalog'), logged_in=None)
+		return redirect(url_for('showCatalog'))
 
 
 ##################################
@@ -386,7 +389,7 @@ def newItem(category_name):
 				state = login_session['securityState'], categories  = categories, logged_in=1)
 	 #if the user isnt' logged in they can't edit the catalog
 	else:
-		return redirect(url_for('login'), logged_in=None)
+		return redirect(url_for('login'))
 	
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods = ['GET', 'POST'])
@@ -426,7 +429,7 @@ def editItem(category_name, item_name):
 						editItem.catalog_image_url = os.path.join(editImageName)
 						session.add(editItem)
   				session.commit()
-	    		return redirect(url_for('showItems', category_name = category_name), logged_in=1)
+	    		return redirect(url_for('showItems', category_name = category_name))
 		else:
 			#get block
 			#Find the catgory the edited Item belongs to
@@ -441,7 +444,7 @@ def editItem(category_name, item_name):
 				categories = categories, state = login_session['securityState'], logged_in=1)
 	 #if the user isnt' logged in they can't edit the catalog
 	else:
-		return redirect(url_for('showItems', category_name = category_name), logged_in=None)
+		return redirect(url_for('showItems', category_name = category_name))
 
 
 
@@ -463,7 +466,7 @@ def deleteItem(category_name, item_name):
 				session.delete(deleteItem)
 				session.commit()
 				flash("Deleted item: %s" % deleteItem.name)
-				return redirect(url_for('showItems', category_name = category_name), logged_in=1)
+				return redirect(url_for('showItems', category_name = category_name) )
 		else:
 			#Delete Item Get Block
 			deleteItem = session.query(CatalogItem).filter_by(name = item_name).one()
@@ -473,7 +476,7 @@ def deleteItem(category_name, item_name):
 				state=login_session['securityState'], logged_in=1)
 	 #if the user isnt' logged in they can't edit the catalog
 	else:
-		return redirect(url_for('showItems', category_name = category_name), logged_in=None)
+		return redirect(url_for('showItems', category_name = category_name))
 
 
 

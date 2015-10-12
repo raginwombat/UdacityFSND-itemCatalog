@@ -5,6 +5,9 @@ from database_setup import Base, User, Category, CatalogItem
 
 import random, string
 
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif', 'jpeg', 'tiff', 'bmp', 'svg'])
+
+
 #user state debug block
 def userStateDebug(login_session):
 	print "User State:"
