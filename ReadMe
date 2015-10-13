@@ -5,30 +5,27 @@
 |   Project 3 subumission by R. Nelson	|
  	-----------------------------------
 
- Overview
+ # Overview
 -----------------------------------------------------
 This is a web app that allows a user to display a catalog of items grouped by category. Once logged in the can edit, create and delete categories and items.
 
 
-Instructions
------------------------------------------------------
-
-Documentation
+# Documentation
 --------------------------------
 
 To interact with the app open a web broser and go to localhost:5000/
 Pages:
-	localhost:5000/ or localhost:5000/catalog main site
-	localhost:5000/catalog/json JSON dump of the catalog and items
-	localhost:5000/catalog/xml XML dump of the catalog
+	* localhost:5000/ or localhost:5000/catalog main site
+	* localhost:5000/catalog/json JSON dump of the catalog and items
+	* localhost:5000/catalog/xml XML dump of the catalog
 
 
 
-Installation
+# Installation
 --------------------------------
 This library requires SQLite, Python 2.7 and Flask >=0.9 installed locally. THe libraries can be installed using the apt-get command or by using the UDacity Nano Degree VM available from http://github.com/udacity/full.
 
-Setting Up 0Auth2
+## Setting Up 0Auth2
 ---------------------------
 To host this app a Google+ 0Auth2 client secret must be created. Follow the instruction in https://auth0.com/docs/connections/social/google to generate a web application 0Auth2 client secret.
 
@@ -40,22 +37,22 @@ After creating download the resulting client_secrets.json place it in the root d
 
 You must also replace the data-clientid string in the ./templates/login.html file with the client ID that was created and is in the client_secret.json file.
 
-Setting Up the Enviroment 
+## Setting Up the Enviroment 
 ---------------------------
 To setup the application you'll need to have Python, Flask and SQLAlchemy install on the server.
 Navigate to the directory with the scrpts in it and run the followign commands:
 	
-	Set Up up the database for the app
-	$ python database_set.py 
+	* Set Up up the database for the app
+		' $ python database_set.py '
 
-	This step is optional, but highly recommended if you'd like to preload the app with data prior to use.
-	$ testCatalog.py 
+	* This step is optional, but highly recommended if you'd like to preload the app with data prior to use.
+		' $ testCatalog.py  '
 
-	Run the application
-	$ python  itemCatalog.py
+	* Run the application
+		' $ python  itemCatalog.py '
 
 Sucessfull completion of the setup and launching of the app will result in the comandline displaying the following:
 
- * Running on http://0.0.0.0:5000/
- * Restarting with reloader
+ * ' Running on http://0.0.0.0:5000/ '
+ * ' Restarting with reloader '
 

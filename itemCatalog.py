@@ -9,7 +9,7 @@ from database_setup import Base, User, Category, CatalogItem
 
 #Session token imports
 from flask import session as login_session
-import string
+import string, requests
 
 #API endpoint
 from werkzeug.contrib.atom import AtomFeed
@@ -206,30 +206,7 @@ def showCatalog():
 		return render_template('publicCatalogMain.html', categories = categories, latestItems=latest_Items, logged_in=None)
 
 
-@app.route('/catalog/new', methods = ['GET', 'POST'])
-def newCatalog():
-	#check if user is logged in
-	if 'username' in login_session:
-		categories = session.query(Category).all()
-		if request.method == 'POST':
-			if request.form['token_id'] != login_session['securityState']:
-				flash("Error, incorrect security Key. please try again")
-				return redirect(url_for('showCatalog'))
-			else:
-				newCatalog = Catalog( name = request.form['name'], user_id = login_session['user_id'] )
-				#post snippet            
-				flash('Created New Catalog')
-				return redirect( url_for('showCatalog') )
-		else:
-			#Get Block
-			login_session['securityState']  =  createState()
-		
-			return render_template('catalogNew.html', state = login_session['securityState'], logged_in=1)
-	 #if the user isnt' logged in they can't edit the catalog
-	else:
-		#if user isn't logged in bounce them back to show catalog
-		print "User isn't logged in"
-		return redirect(url_for('showCatalog') )
+
 
 @app.route('/catalog/<string:category_name>/edit', methods = ['GET', 'POST'])
 	#edit catalog
