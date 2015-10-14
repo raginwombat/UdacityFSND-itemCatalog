@@ -375,13 +375,17 @@ def editItem(category_name, item_name):
 		if request.method == 'POST':
 			#post snippet
 			#CSRF mitigation
+			category = session.query(Category).filter_by( name=category_name).one()
+			editItem = session.query(CatalogItem).filter_by( category_id=category.id, name=item_name).one()
 			if request.form['token_id'] != login_session['securityState']:
 				flash("Error, incorrect security Key. please try again")
 				return redirect(url_for('showCatalog'))
+			elif login_session['user_id'] != editItem.user_id:
+				flash("Error, you don't own this item and can't edit it")
+				return redirect(url_for('showCatalog'))
 			else: #Authenticated, actuallly change item
 				#actually post change
-				category = session.query(Category).filter_by( name=category_name).one()
-				editItem = session.query(CatalogItem).filter_by( category_id=category.id, name=item_name).one()
+				
 
 				editItem.name = request.form['name']
   				editItem.description =  request.form['description']
@@ -472,15 +476,15 @@ def APISupport(exensivility_API):
 		nameString = 'Catalog for user %s'%login_session['username']
 		catalog = Element('Catalog')
 		for cat in session.query(Category).all():
-			category = SubElement(catalog, "Category Name")
+			category = SubElement(catalog, "Category_Name")
 			category.text = cat.name
 			for item in session.query(CatalogItem).filter_by(category_id = cat.id).all():
 				
-				catItem  = SubElement(category, 'Item Name')
+				catItem  = SubElement(category, 'Item_Name')
 				catItem.text =  item.name
 				descItem  = SubElement(category, 'Description')
 				descItem.text =  item.description
-				imgItem = SubElement(category, 'Image Name')
+				imgItem = SubElement(category, 'Image_Name')
 				imgItem.text = item.catalog_image_url
 
 		response = make_response(tostring(catalog, 'utf-8'), 200)
